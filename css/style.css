@@ -138,6 +138,13 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+
+
+/* Fix for Dark Page (Kiss Day) */
+.dark-page .page-wrapper {
+  background: transparent;
+}
+
 @media (min-width: 500px) {
   body {
     background: #f0f0f0;
@@ -154,6 +161,11 @@ body {
     /* Stronger shadow */
     min-height: calc(100vh - 40px);
     padding: var(--space-md);
+  }
+
+  /* Ensure Dark Page keeps its background on desktop constraints */
+  .dark-page .page-wrapper {
+    background: linear-gradient(160deg, #0D1B2A 0%, #1B2838 50%, #0D1B2A 100%);
   }
 }
 
