@@ -1200,3 +1200,118 @@ body {
     height: 85px;
   }
 }
+
+/* ---------- Password Modal ---------- */
+.password-modal {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-primary);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  backdrop-filter: blur(10px);
+}
+
+.password-modal.hidden {
+  display: none;
+}
+
+.password-content {
+  background: white;
+  padding: var(--space-xl);
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(139, 34, 82, 0.1);
+  width: 100%;
+  max-width: 320px;
+  border: 1px solid rgba(232, 160, 191, 0.2);
+  animation: fadeInUp 0.5s var(--ease-smooth);
+}
+
+.password-emoji {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.password-content h2 {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--accent-deep);
+  margin-bottom: var(--space-xs);
+}
+
+.password-content p {
+  font-family: var(--font-handwriting);
+  font-size: 1.2rem;
+  color: var(--text-light);
+  margin-bottom: var(--space-lg);
+}
+
+#password-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.5rem;
+  text-align: center;
+  border: 2px solid rgba(232, 160, 191, 0.3);
+  border-radius: 12px;
+  margin-bottom: var(--space-md);
+  color: var(--accent-deep);
+  font-family: var(--font-body);
+  letter-spacing: 4px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+#password-input:focus {
+  border-color: var(--accent-rose);
+}
+
+.password-btn {
+  background: var(--accent-deep);
+  color: white;
+  padding: 12px 32px;
+  border-radius: 24px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: transform 0.2s, background 0.2s;
+  width: 100%;
+}
+
+.password-btn:active {
+  transform: scale(0.96);
+  background: var(--accent-rose);
+}
+
+.password-error {
+  color: #ff4757;
+  font-size: 0.9rem;
+  margin-bottom: var(--space-md);
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s;
+  height: 0;
+  display: block;
+}
+
+.password-error.visible {
+  opacity: 1;
+  transform: translateY(0);
+  height: auto;
+  margin-bottom: var(--space-md);
+}

@@ -29,11 +29,11 @@ function getCountdownToDay1() {
   const now = new Date();
   const diff = unlockUTC - now;
   if (diff <= 0) return null;
-  
+
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  
+
   if (days > 0) return `${days} day${days > 1 ? 's' : ''}, ${hours}h ${minutes}m`;
   if (hours > 0) return `${hours}h ${minutes}m`;
   return `${minutes}m`;
@@ -51,7 +51,7 @@ function checkDayAccess(dayNumber) {
 function showLockScreen(dayNumber) {
   const daysLeft = getDaysUntilUnlock(dayNumber);
   const dayNames = ['', 'Rose Day', 'Propose Day', 'Chocolate Day', 'Teddy Day', 'Promise Day', 'Hug Day', 'Kiss Day', "Valentine's Day"];
-  
+
   const overlay = document.createElement('div');
   overlay.className = 'locked-overlay';
   overlay.innerHTML = `
@@ -68,7 +68,7 @@ function showLockScreen(dayNumber) {
 function initScrollAnimations(selector = '.milestone, .promise-item, .valentine-letter p') {
   const elements = document.querySelectorAll(selector);
   if (!elements.length) return;
-  
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -80,7 +80,7 @@ function initScrollAnimations(selector = '.milestone, .promise-item, .valentine-
     threshold: 0.2,
     rootMargin: '0px 0px -40px 0px'
   });
-  
+
   elements.forEach(el => observer.observe(el));
 }
 
@@ -89,7 +89,7 @@ function initScrollAnimations(selector = '.milestone, .promise-item, .valentine-
 function initFloatingPetals(emoji = '🌸', count = 12) {
   const container = document.createElement('div');
   container.className = 'floating-petals';
-  
+
   for (let i = 0; i < count; i++) {
     const petal = document.createElement('span');
     petal.className = 'petal';
@@ -101,7 +101,7 @@ function initFloatingPetals(emoji = '🌸', count = 12) {
     petal.style.fontSize = (0.8 + Math.random() * 0.6) + 'rem';
     container.appendChild(petal);
   }
-  
+
   document.body.appendChild(container);
 }
 
@@ -110,7 +110,7 @@ function initFloatingPetals(emoji = '🌸', count = 12) {
 function initStars(count = 80) {
   const container = document.createElement('div');
   container.className = 'stars-container';
-  
+
   for (let i = 0; i < count; i++) {
     const star = document.createElement('div');
     star.className = 'star';
@@ -118,14 +118,14 @@ function initStars(count = 80) {
     star.style.top = Math.random() * 100 + '%';
     star.style.setProperty('--duration', (2 + Math.random() * 4) + 's');
     star.style.setProperty('--delay', (Math.random() * 3) + 's');
-    
+
     const size = Math.random() > 0.8 ? 3 : (Math.random() > 0.5 ? 2 : 1);
     star.style.width = size + 'px';
     star.style.height = size + 'px';
-    
+
     container.appendChild(star);
   }
-  
+
   document.body.appendChild(container);
 }
 
@@ -142,18 +142,18 @@ function triggerShootingStar() {
 // ---- Hub Page Initialization ----
 function initHub() {
   const cards = document.querySelectorAll('.timeline-card');
-  
+
   cards.forEach(card => {
     const dayNum = parseInt(card.dataset.day);
-    
+
     if (isDayUnlocked(dayNum)) {
       card.classList.add('unlocked');
       card.classList.remove('locked');
-      
+
       // Remove lock text if present
       const lockText = card.querySelector('.timeline-card-lock');
       if (lockText) lockText.remove();
-      
+
       // Make clickable
       card.querySelector('.timeline-card-inner').addEventListener('click', () => {
         window.location.href = `day${dayNum}.html`;
@@ -161,7 +161,7 @@ function initHub() {
     } else {
       card.classList.add('locked');
       card.classList.remove('unlocked');
-      
+
       const daysLeft = getDaysUntilUnlock(dayNum);
       const lockText = card.querySelector('.timeline-card-lock');
       if (lockText) {
@@ -169,7 +169,7 @@ function initHub() {
       }
     }
   });
-  
+
   // Countdown timer
   const countdownEl = document.getElementById('countdown');
   if (countdownEl) {
@@ -185,4 +185,53 @@ function initHub() {
     updateCountdown();
     setInterval(updateCountdown, 60000); // Update every minute
   }
+}
+
+// ---- Password Protection ----
+function initPassword() {
+  const modal = document.getElementById('password-modal');
+  const input = document.getElementById('password-input');
+  const btn = document.getElementById('password-submit');
+  const errorMsg = document.getElementById('password-error');
+
+  // Check if already unlocked in this session
+  if (sessionStorage.getItem('unlocked') === 'true') {
+    modal.classList.add('hidden');
+    return;
+  }
+
+  function checkCode() {
+    const code = input.value;
+    if (code === '0512') {
+      sessionStorage.setItem('unlocked', 'true');
+      modal.style.opacity = '0';
+      modal.style.transition = 'opacity 0.5s';
+      setTimeout(() => modal.classList.add('hidden'), 500);
+    } else {
+      errorMsg.classList.add('visible');
+      input.value = '';
+      input.focus();
+      // Shake animation
+      input.style.transform = 'translateX(10px)';
+      setTimeout(() => input.style.transform = 'translateX(-10px)', 100);
+      setTimeout(() => input.style.transform = 'translateX(10px)', 200);
+      setTimeout(() => input.style.transform = 'translateX(0)', 300);
+    }
+  }
+
+  btn.addEventListener('click', checkCode);
+
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') checkCode();
+  });
+
+  // Clear error on input
+  input.addEventListener('input', () => {
+    errorMsg.classList.remove('visible');
+  });
+}
+
+// Call initPassword if we are on the index page
+if (document.getElementById('password-modal')) {
+  initPassword();
 }
