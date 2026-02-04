@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Kiss Day — For Aastu ♡</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background: linear-gradient(160deg, #0D1B2A 0%, #1B2838 50%, #0D1B2A 100%); }
+  </style>
+</head>
+<body class="dark-page">
+  <a href="index.html" class="back-btn">←</a>
+
+  <div class="page-wrapper">
+    <div class="page-content">
+
+      <div class="day-header" style="color: var(--text-on-dark);">
+        <div class="day-label" style="opacity: 0.5;">Day 7 · February 13</div>
+        <h1 class="day-title" style="color: #E8A0BF;">Kiss Day</h1>
+        <div class="day-date" style="color: rgba(240,230,239,0.5);">for the late night calls</div>
+      </div>
+
+      <div class="kiss-content">
+        
+        <div class="kiss-line">
+          You know that moment right before you fall asleep on call — when your words turn into hmms?
+        </div>
+
+        <div class="kiss-line">
+          Those little hmms say more than anyone's ever said to me.
+        </div>
+
+        <div class="kiss-line">
+          I don't need you to stay awake. I just need you to stay.
+        </div>
+
+        <div class="kiss-line">
+          One day there won't be a phone between us. Just us. Every night.
+        </div>
+
+        <div class="kiss-final">
+          Until then — goodnight, puku baby.<br>
+          This one's for every kiss the screen stole from us. ♡
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    if (checkDayAccess(7)) {
+      initStars(80);
+      
+      // Stagger the lines appearing
+      const lines = document.querySelectorAll('.kiss-line');
+      const final = document.querySelector('.kiss-final');
+      
+      lines.forEach((line, i) => {
+        setTimeout(() => {
+          line.classList.add('visible');
+        }, 1000 + (i * 2000)); // 2 seconds between each line
+      });
+      
+      // Show final after all lines
+      setTimeout(() => {
+        final.classList.add('visible');
+      }, 1000 + (lines.length * 2000) + 1000);
+      
+      // Random shooting stars
+      setInterval(() => {
+        if (Math.random() > 0.6) triggerShootingStar();
+      }, 4000);
+    }
+  </script>
+</body>
+</html>

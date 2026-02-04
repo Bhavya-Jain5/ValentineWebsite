@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Teddy Day — For Aastu ♡</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background: linear-gradient(160deg, #FFF8F0 0%, #FFF5ED 50%, #FFFAF5 100%); }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-btn">←</a>
+
+  <div class="page-wrapper">
+    <div class="page-content">
+
+      <div class="day-header">
+        <div class="day-label">Day 4 · February 10</div>
+        <h1 class="day-title">Teddy Day</h1>
+        <div class="day-date">our inside jokes, one card at a time</div>
+      </div>
+
+      <div class="teddy-container">
+        <div class="teddy-emoji" id="teddy">🧸</div>
+      </div>
+
+      <div class="teddy-card" id="teddy-card">
+        <p id="teddy-text">Tap the teddy to start! ♡</p>
+      </div>
+
+      <div class="teddy-nav">
+        <button class="teddy-nav-btn" id="prev-btn">◀</button>
+        <span class="teddy-counter" id="teddy-counter">tap 🧸</span>
+        <button class="teddy-nav-btn" id="next-btn">▶</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    if (checkDayAccess(4)) {
+      initFloatingPetals('🧸', 5);
+      
+      const cards = [
+        "Remember when you told me to buy Bunny for your mom? We both know that was a test. And I passed. 💪",
+        "Your brother STOLE Bunny from you but he can never steal us 😤",
+        "Aavya misses her mom Pengu. Family reunion in March? 🏠",
+        "50 kisses per call is the MINIMUM. Non-negotiable. 💋💋💋",
+        "Laal tamatar gang 🍅 Beetroot skincare survivors forever",
+        "First date me: aur batao... aur batao... Now me: can't get me to shut up",
+        "Certified man hater but certified MY baby. The duality. ♡"
+      ];
+      
+      let current = -1; // Start at -1 (before first card)
+      const teddy = document.getElementById('teddy');
+      const text = document.getElementById('teddy-text');
+      const counter = document.getElementById('teddy-counter');
+      const cardEl = document.getElementById('teddy-card');
+      
+      function showCard(index) {
+        current = Math.max(0, Math.min(cards.length - 1, index));
+        text.style.opacity = '0';
+        
+        // Wiggle teddy
+        teddy.classList.remove('wiggle');
+        void teddy.offsetWidth; // force reflow
+        teddy.classList.add('wiggle');
+        
+        setTimeout(() => {
+          text.textContent = cards[current];
+          text.style.opacity = '1';
+          counter.textContent = `${current + 1} / ${cards.length}`;
+        }, 200);
+      }
+      
+      teddy.addEventListener('click', () => {
+        showCard(current + 1);
+      });
+      
+      document.getElementById('prev-btn').addEventListener('click', () => {
+        if (current > 0) showCard(current - 1);
+      });
+      
+      document.getElementById('next-btn').addEventListener('click', () => {
+        showCard(current + 1);
+      });
+      
+      // Add transition to text
+      text.style.transition = 'opacity 0.3s';
+    }
+  </script>
+</body>
+</html>

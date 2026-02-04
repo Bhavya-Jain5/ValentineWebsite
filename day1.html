@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Rose Day — For Aastu ♡</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background: linear-gradient(160deg, #F0FFF0 0%, #FFF5F5 40%, #FFE8EF 100%); }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-btn">←</a>
+
+  <div class="page-wrapper">
+    <div class="page-content">
+
+      <div class="day-header">
+        <div class="day-label">Day 1 · February 7</div>
+        <h1 class="day-title">Rose Day</h1>
+        <div class="day-date">for the girl who changed everything</div>
+      </div>
+
+      <div class="rose-container">
+        <div class="rose-emoji" id="rose" title="Tap me!">🌹</div>
+      </div>
+
+      <div id="petal-display">
+        <p class="rose-instruction" id="rose-instruction">tap the rose ♡</p>
+      </div>
+
+      <div class="petal-counter" id="petal-counter" style="display:none;"></div>
+
+      <div class="rose-final-message" id="rose-final" style="display:none;">
+        Every love story has a first chapter. Ours started with too many fries and not enough courage — and I'd do it all over again.<br><br>Happy Rose Day, Aastu ♡
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    if (!checkDayAccess(1)) { /* blocked */ }
+    else {
+      initFloatingPetals('🌸', 10);
+      
+      const petals = [
+        "A cafe in Bundi. Too many fries. Zero eye contact.",
+        "Aur batao... aur batao... aur batao...",
+        "One rose on June 24th that changed everything.",
+        "The first time you told me about yourself — that's when I knew.",
+        "Hours on the phone. Your voice became my home.",
+        "Beetroot faces. Laal tamatar. Our kind of love."
+      ];
+      
+      let currentPetal = 0;
+      const rose = document.getElementById('rose');
+      const display = document.getElementById('petal-display');
+      const counter = document.getElementById('petal-counter');
+      const instruction = document.getElementById('rose-instruction');
+      const finalMsg = document.getElementById('rose-final');
+      
+      rose.addEventListener('click', () => {
+        if (currentPetal < petals.length) {
+          // Show petal message
+          display.innerHTML = `<p class="petal-message" key="${currentPetal}">${petals[currentPetal]}</p>`;
+          counter.style.display = 'block';
+          counter.textContent = `${currentPetal + 1} / ${petals.length}`;
+          
+          // Wiggle the rose
+          rose.style.transform = 'scale(0.85) rotate(' + (Math.random() > 0.5 ? 5 : -5) + 'deg)';
+          setTimeout(() => rose.style.transform = 'scale(1) rotate(0)', 300);
+          
+          currentPetal++;
+        } else {
+          // All petals revealed — show final message
+          display.style.display = 'none';
+          counter.style.display = 'none';
+          rose.style.transition = 'all 1s var(--ease-smooth)';
+          rose.style.transform = 'scale(1.3)';
+          rose.style.filter = 'drop-shadow(0 4px 30px rgba(232, 160, 191, 0.6))';
+          rose.style.pointerEvents = 'none';
+          finalMsg.style.display = 'block';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
