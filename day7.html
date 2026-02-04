@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Kiss Day — For Aastu ♡</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    body { background: linear-gradient(160deg, #0D1B2A 0%, #1B2838 50%, #0D1B2A 100%); }
+    body {
+      background: linear-gradient(160deg, #0D1B2A 0%, #1B2838 50%, #0D1B2A 100%);
+    }
   </style>
 </head>
+
 <body class="dark-page">
   <a href="index.html" class="back-btn">←</a>
 
@@ -22,7 +26,7 @@
       </div>
 
       <div class="kiss-content">
-        
+
         <div class="kiss-line">
           You know that moment right before you fall asleep on call — when your words turn into hmms?
         </div>
@@ -49,26 +53,28 @@
     </div>
   </div>
 
+  <script src="js/sounds.js"></script>
   <script src="js/main.js"></script>
   <script>
     if (checkDayAccess(7)) {
       initStars(80);
-      
+
       // Stagger the lines appearing
       const lines = document.querySelectorAll('.kiss-line');
       const final = document.querySelector('.kiss-final');
-      
+
       lines.forEach((line, i) => {
         setTimeout(() => {
+          if (window.SoundManager) SoundManager.sfxKissLineAppear();
           line.classList.add('visible');
         }, 1000 + (i * 2000)); // 2 seconds between each line
       });
-      
+
       // Show final after all lines
       setTimeout(() => {
         final.classList.add('visible');
       }, 1000 + (lines.length * 2000) + 1000);
-      
+
       // Random shooting stars
       setInterval(() => {
         if (Math.random() > 0.6) triggerShootingStar();
@@ -76,4 +82,5 @@
     }
   </script>
 </body>
+
 </html>

@@ -374,8 +374,18 @@ body {
 }
 
 .timeline-card.locked .timeline-card-inner {
-  opacity: 0.55;
-  filter: grayscale(0.3);
+  position: relative;
+  overflow: hidden;
+  background: white;
+}
+
+.timeline-card.locked .timeline-card-inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  /* 90% opacity black overlay */
+  z-index: 5;
 }
 
 .timeline-card-name {
@@ -392,9 +402,13 @@ body {
 
 .timeline-card-lock {
   font-size: 0.75rem;
-  color: var(--accent-rose);
+  color: #fff;
+  /* White text for visibility on black */
   margin-top: 4px;
   font-family: var(--font-handwriting);
+  position: relative;
+  z-index: 10;
+  /* Above the overlay */
 }
 
 .timeline-card-emoji {
@@ -600,16 +614,21 @@ body {
 .chocolate-back {
   background: linear-gradient(145deg, #FFF5F0, #FFF0E8);
   transform: rotateY(180deg);
-  padding: 10px;
+  padding: 6px;
   border: 1px solid rgba(196, 146, 74, 0.2);
 }
 
 .chocolate-back p {
   font-family: var(--font-handwriting);
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   color: var(--text-primary);
   text-align: center;
-  line-height: 1.4;
+  line-height: 1.25;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 
 .chocolate-counter {

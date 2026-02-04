@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Hug Day — For Aastu ♡</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    body { background: linear-gradient(160deg, #FFECD2 0%, #FCB69F20 30%, #FFF5F0 100%); }
+    body {
+      background: linear-gradient(160deg, #FFECD2 0%, #FCB69F20 30%, #FFF5F0 100%);
+    }
   </style>
 </head>
+
 <body>
   <a href="index.html" class="back-btn">←</a>
 
@@ -35,11 +39,12 @@
     </div>
   </div>
 
+  <script src="js/sounds.js"></script>
   <script src="js/main.js"></script>
   <script>
     if (checkDayAccess(6)) {
       initFloatingPetals('🧡', 6);
-      
+
       const messages = [
         { emoji: '🔋', text: 'You are my 15-minute reset button. No matter what\'s wrong, you fix it.' },
         { emoji: '🏠', text: 'I moved cities for you once. I\'m doing it again. Because home is wherever you are.' },
@@ -49,16 +54,17 @@
         { emoji: '🍳', text: 'I don\'t need the world. I just need you, our kids, and a kitchen to cook in together.' },
         { emoji: '♡', text: 'You chose me when you didn\'t have to. I\'ll spend every day being worth that choice.' }
       ];
-      
+
       const orbsContainer = document.getElementById('hug-orbs');
       const messageDisplay = document.getElementById('hug-message');
       const instruction = document.getElementById('hug-instruction');
-      
+
       messages.forEach((msg, i) => {
         const orb = document.createElement('div');
         orb.className = 'hug-orb';
         orb.textContent = msg.emoji;
         orb.addEventListener('click', () => {
+          if (window.SoundManager) SoundManager.sfxOrbTap();
           orb.classList.add('revealed');
           instruction.style.display = 'none';
           messageDisplay.innerHTML = `<p>${msg.text}</p>`;
@@ -68,4 +74,5 @@
     }
   </script>
 </body>
+
 </html>

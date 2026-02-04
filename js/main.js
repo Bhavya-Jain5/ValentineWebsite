@@ -3,29 +3,47 @@
    Shared JavaScript
    ============================================ */
 
-const TEST_MODE = true; // Set to true to bypass date checks
+const TEST_MODE = false; // Set to true to bypass date checks
 
 // ---- Date Gating (IST Timezone) ----
 // Days: 1=Feb7, 2=Feb8, ..., 8=Feb14
-// Midnight IST = UTC 18:30 previous day
+// 6 AM IST = UTC 00:30 same day
+function getUnlockDate(dayNumber) {
+  return new Date(Date.UTC(2026, 1, 6 + dayNumber, 0, 30, 0));
+}
+
 function isDayUnlocked(dayNumber) {
   if (TEST_MODE) return true;
-  const unlockUTC = new Date(Date.UTC(2026, 1, 5 + dayNumber, 18, 30, 0));
-  return new Date() >= unlockUTC;
+  return new Date() >= getUnlockDate(dayNumber);
 }
 
 function getDaysUntilUnlock(dayNumber) {
   if (TEST_MODE) return 0;
-  const unlockUTC = new Date(Date.UTC(2026, 1, 5 + dayNumber, 18, 30, 0));
+  const unlockUTC = getUnlockDate(dayNumber);
   const now = new Date();
   const diff = unlockUTC - now;
   if (diff <= 0) return 0;
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 }
 
-function getCountdownToDay1() {
+const DAY_NAMES = ['', 'Rose Day', 'Propose Day', 'Chocolate Day', 'Teddy Day', 'Promise Day', 'Hug Day', 'Kiss Day', "Valentine's Day"];
+
+function getNextLockedDayIndex() {
+  for (let i = 1; i <= 8; i++) {
+    if (!isDayUnlocked(i)) {
+      return i;
+    }
+  }
+  return null; // All days unlocked
+}
+
+function getCountdownToNextUnlock() {
   if (TEST_MODE) return null;
-  const unlockUTC = new Date(Date.UTC(2026, 1, 6, 18, 30, 0)); // Feb 7 midnight IST
+
+  const nextDayIndex = getNextLockedDayIndex();
+  if (!nextDayIndex) return null; // All days unlocked
+
+  const unlockUTC = getUnlockDate(nextDayIndex);
   const now = new Date();
   const diff = unlockUTC - now;
   if (diff <= 0) return null;
@@ -33,10 +51,24 @@ function getCountdownToDay1() {
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-  if (days > 0) return `${days} day${days > 1 ? 's' : ''}, ${hours}h ${minutes}m`;
-  if (hours > 0) return `${hours}h ${minutes}m`;
-  return `${minutes}m`;
+  let parts = [];
+  if (days > 0) parts.push(`${days} day${days > 1 ? 's' : ''}`);
+  if (hours > 0) parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
+  if (minutes > 0) parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
+  if (seconds > 0 || parts.length === 0) parts.push(`${seconds} second${seconds !== 1 ? 's' : ''}`);
+
+  let timeString = parts[0];
+  if (parts.length > 1) {
+    const lastPart = parts.pop();
+    timeString = parts.join(', ') + ' and ' + lastPart;
+  }
+
+  return {
+    timeString: timeString,
+    dayName: DAY_NAMES[nextDayIndex]
+  };
 }
 
 // Check if current page's day is unlocked, show lock screen if not
@@ -50,22 +82,20 @@ function checkDayAccess(dayNumber) {
 
 function showLockScreen(dayNumber) {
   const daysLeft = getDaysUntilUnlock(dayNumber);
-  const dayNames = ['', 'Rose Day', 'Propose Day', 'Chocolate Day', 'Teddy Day', 'Promise Day', 'Hug Day', 'Kiss Day', "Valentine's Day"];
 
   const overlay = document.createElement('div');
   overlay.className = 'locked-overlay';
   overlay.innerHTML = `
     <div class="locked-emoji">🔒</div>
-    <div class="locked-text">${dayNames[dayNumber]} isn't here yet</div>
+    <div class="locked-text">${DAY_NAMES[dayNumber]} isn't here yet</div>
     <div class="locked-subtext">Unlocks in ${daysLeft} day${daysLeft > 1 ? 's' : ''} ♡</div>
     <a href="index.html" class="locked-btn">← Back to Hub</a>
   `;
   document.body.appendChild(overlay);
 }
 
-
 // ---- Scroll-triggered Animations ----
-function initScrollAnimations(selector = '.milestone, .promise-item, .valentine-letter p') {
+function initScrollAnimations(selector = '.milestone, .promise-item, .valentine-letter p', soundCallback = null) {
   const elements = document.querySelectorAll(selector);
   if (!elements.length) return;
 
@@ -73,6 +103,9 @@ function initScrollAnimations(selector = '.milestone, .promise-item, .valentine-
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
+        if (soundCallback && typeof soundCallback === 'function') {
+          soundCallback();
+        }
         observer.unobserve(entry.target);
       }
     });
@@ -130,6 +163,7 @@ function initStars(count = 80) {
 }
 
 function triggerShootingStar() {
+  if (window.SoundManager) window.SoundManager.sfxShootingStar();
   const star = document.createElement('div');
   star.className = 'shooting-star';
   star.style.top = (10 + Math.random() * 40) + '%';
@@ -137,7 +171,6 @@ function triggerShootingStar() {
   document.body.appendChild(star);
   setTimeout(() => star.remove(), 1500);
 }
-
 
 // ---- Hub Page Initialization ----
 function initHub() {
@@ -174,16 +207,34 @@ function initHub() {
   const countdownEl = document.getElementById('countdown');
   if (countdownEl) {
     const updateCountdown = () => {
-      const remaining = getCountdownToDay1();
-      if (remaining) {
-        countdownEl.textContent = `First day unlocks in ${remaining}`;
+      const result = getCountdownToNextUnlock();
+
+      if (result) {
+        countdownEl.textContent = `${result.dayName} in ${result.timeString}`;
         countdownEl.style.display = 'inline-block';
       } else {
+        // If no result, it might mean the timer just finished OR everything is unlocked
+        // Check if we need to reload due to a recent unlock event
+        const nextLocked = getNextLockedDayIndex();
+
+        // If we were tracking a locked day and now we aren't getting a countdown, it might be time to reload
+        // Or if all days are unlocked, hide the counter
+        if (!nextLocked) {
+          countdownEl.style.display = 'none';
+          return;
+        }
+
+        if (countdownEl.style.display !== 'none') {
+          // Timer just finished! Refresh to unlock.
+          sessionStorage.setItem('autoReload', 'true');
+          countdownEl.style.display = 'none';
+          window.location.reload();
+        }
         countdownEl.style.display = 'none';
       }
     };
     updateCountdown();
-    setInterval(updateCountdown, 60000); // Update every minute
+    setInterval(updateCountdown, 1000); // Update every second
   }
 }
 
@@ -194,14 +245,20 @@ function initPassword() {
   const btn = document.getElementById('password-submit');
   const errorMsg = document.getElementById('password-error');
 
-  // Check if it's a reload - if so, re-lock
+  // Check if it's a reload - if so, re-lock UNLESS it was an auto-reload
   try {
     const navEntry = performance.getEntriesByType("navigation")[0];
     if (navEntry && navEntry.type === 'reload') {
-      sessionStorage.removeItem('unlocked');
+      if (sessionStorage.getItem('autoReload') === 'true') {
+        // It was an auto-reload (timer finished), so keep unlocked
+        sessionStorage.removeItem('autoReload');
+      } else {
+        // Manual reload, re-lock
+        sessionStorage.removeItem('unlocked');
+      }
     }
   } catch (e) {
-    // Fallback for older browsers (optional)
+    // Fallback
   }
 
   // Check if already unlocked in this session

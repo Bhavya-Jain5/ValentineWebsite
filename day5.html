@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Promise Day — For Aastu ♡</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    body { background: linear-gradient(160deg, #F5ECD7 0%, #FFF8F0 50%, #F5ECD7 100%); }
+    body {
+      background: linear-gradient(160deg, #F5ECD7 0%, #FFF8F0 50%, #F5ECD7 100%);
+    }
   </style>
 </head>
+
 <body>
   <a href="index.html" class="back-btn">←</a>
 
@@ -22,54 +26,67 @@
       </div>
 
       <div class="promise-letter">
-        
+
         <div class="promise-greeting">My Aastu,</div>
-        <p style="font-family: var(--font-handwriting); font-size: 1.05rem; color: var(--text-light); margin-bottom: var(--space-md); line-height: 1.6;">
-          These aren't just words. These are promises I'm making to you — and I don't break promises to the person I love most.
+        <p
+          style="font-family: var(--font-handwriting); font-size: 1.05rem; color: var(--text-light); margin-bottom: var(--space-md); line-height: 1.6;">
+          These aren't just words. These are promises I'm making to you — and I don't break promises to the person I
+          love most.
         </p>
 
         <div class="promise-item">
-          <span class="promise-number">1.</span> I promise to always keep you safe — from the world, from the hate, from all the bad things out there.
+          <span class="promise-number">1.</span> I promise to always keep you safe — from the world, from the hate, from
+          all the bad things out there.
         </div>
 
         <div class="promise-item">
-          <span class="promise-number">2.</span> I promise to always love you the way I did at the start — with that same nervousness, the same butterflies, the same "I can't believe she chose me."
+          <span class="promise-number">2.</span> I promise to always love you the way I did at the start — with that
+          same nervousness, the same butterflies, the same "I can't believe she chose me."
         </div>
 
         <div class="promise-item">
-          <span class="promise-number">3.</span> I promise to fulfil all our dreams — every single one, no matter how big.
+          <span class="promise-number">3.</span> I promise to fulfil all our dreams — every single one, no matter how
+          big.
         </div>
 
         <div class="promise-item">
-          <span class="promise-number">4.</span> I promise to shift to Jaipur — to finally close this distance and come home to you.
+          <span class="promise-number">4.</span> I promise to shift to Jaipur — to finally close this distance and come
+          home to you.
         </div>
 
         <div class="promise-item">
-          <span class="promise-number">5.</span> I promise to take you on so many trips — beaches in India, beaches outside India, everywhere you want to go.
+          <span class="promise-number">5.</span> I promise to take you on so many trips — beaches in India, beaches
+          outside India, everywhere you want to go.
         </div>
 
         <div class="promise-item">
-          <span class="promise-number">6.</span> I promise to take care of my health — because I want to live a long, long life with you by my side.
+          <span class="promise-number">6.</span> I promise to take care of my health — because I want to live a long,
+          long life with you by my side.
         </div>
 
         <div class="promise-item">
-          <span class="promise-number">7.</span> I promise to always prioritize you — over work, over everything, over anyone.
+          <span class="promise-number">7.</span> I promise to always prioritize you — over work, over everything, over
+          anyone.
         </div>
 
         <div class="promise-item">
-          <span class="promise-number">8.</span> I promise to always support you — in anything you want to do, anything you want to be.
+          <span class="promise-number">8.</span> I promise to always support you — in anything you want to do, anything
+          you want to be.
         </div>
 
         <div class="promise-item">
-          <span class="promise-number">9.</span> I promise to always keep you happy — even on the days when the world tries its hardest to make things difficult.
+          <span class="promise-number">9.</span> I promise to always keep you happy — even on the days when the world
+          tries its hardest to make things difficult.
         </div>
 
         <div class="promise-item">
-          <span class="promise-number">10.</span> I promise to do the things you want me to even when I really don't want to — yes, I'm talking about skincare. And yes, only because doing it with you makes it worth it. 😤
+          <span class="promise-number">10.</span> I promise to do the things you want me to even when I really don't
+          want to — yes, I'm talking about skincare. And yes, only because doing it with you makes it worth it. 😤
         </div>
 
         <div class="promise-item">
-          <span class="promise-number">11.</span> I promise to always find time for you — no matter how busy life gets, you will never come second.
+          <span class="promise-number">11.</span> I promise to always find time for you — no matter how busy life gets,
+          you will never come second.
         </div>
 
         <div class="promise-sign">
@@ -84,11 +101,18 @@
     </div>
   </div>
 
+  <script src="js/sounds.js"></script>
   <script src="js/main.js"></script>
   <script>
     if (checkDayAccess(5)) {
-      initScrollAnimations('.promise-item, .promise-sign, .promise-seal');
+      initScrollAnimations('.promise-item, .promise-sign', () => {
+        if (window.SoundManager) SoundManager.sfxPromiseReveal();
+      });
+      initScrollAnimations('.promise-seal', () => {
+        if (window.SoundManager) SoundManager.sfxPromiseSeal();
+      });
     }
   </script>
 </body>
+
 </html>

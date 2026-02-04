@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Chocolate Day — For Aastu ♡</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    body { background: linear-gradient(160deg, #FFF8F0 0%, #FFF5F0 50%, #FFFAF5 100%); }
+    body {
+      background: linear-gradient(160deg, #FFF8F0 0%, #FFF5F0 50%, #FFFAF5 100%);
+    }
   </style>
 </head>
+
 <body>
   <a href="index.html" class="back-btn">←</a>
 
@@ -34,11 +38,12 @@
     </div>
   </div>
 
+  <script src="js/sounds.js"></script>
   <script src="js/main.js"></script>
   <script>
     if (checkDayAccess(3)) {
       initFloatingPetals('🍫', 6);
-      
+
       const messages = [
         "I love the way you match my energy perfectly — no one else even comes close",
         "I love the way you bombard me with 50 kisses every single call 💋",
@@ -50,13 +55,13 @@
         "I love the way you turn any serious conversation inappropriate in 0.2 seconds 😏",
         "Certified man hater who is certified MY baby ♡"
       ];
-      
+
       const emojis = ['🍫', '🍬', '🧁', '🍩', '🍪', '🎁', '🤎', '✨', '🍫'];
       const grid = document.getElementById('chocolate-grid');
       const counter = document.getElementById('choco-counter');
       const final = document.getElementById('choco-final');
       let flipped = 0;
-      
+
       messages.forEach((msg, i) => {
         const item = document.createElement('div');
         item.className = 'chocolate-item';
@@ -68,11 +73,13 @@
         `;
         item.addEventListener('click', () => {
           if (!item.classList.contains('flipped')) {
+            if (window.SoundManager) SoundManager.sfxChocolateFlip();
             item.classList.add('flipped');
             flipped++;
             counter.textContent = `${flipped} / ${messages.length} unwrapped`;
-            
+
             if (flipped === messages.length) {
+              if (window.SoundManager) SoundManager.sfxChocolateComplete();
               setTimeout(() => {
                 final.classList.add('show');
               }, 600);
@@ -84,4 +91,5 @@
     }
   </script>
 </body>
+
 </html>
