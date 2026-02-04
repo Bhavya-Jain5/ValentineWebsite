@@ -194,16 +194,28 @@ function initPassword() {
   const btn = document.getElementById('password-submit');
   const errorMsg = document.getElementById('password-error');
 
+  // Check if it's a reload - if so, re-lock
+  try {
+    const navEntry = performance.getEntriesByType("navigation")[0];
+    if (navEntry && navEntry.type === 'reload') {
+      sessionStorage.removeItem('unlocked');
+    }
+  } catch (e) {
+    // Fallback for older browsers (optional)
+  }
+
   // Check if already unlocked in this session
   if (sessionStorage.getItem('unlocked') === 'true') {
     modal.classList.add('hidden');
     return;
   }
 
+
   function checkCode() {
     const code = input.value;
     if (code === '0512') {
       sessionStorage.setItem('unlocked', 'true');
+
       modal.style.opacity = '0';
       modal.style.transition = 'opacity 0.5s';
       setTimeout(() => modal.classList.add('hidden'), 500);
